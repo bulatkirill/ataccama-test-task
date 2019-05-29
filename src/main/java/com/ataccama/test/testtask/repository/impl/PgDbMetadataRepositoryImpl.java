@@ -2,9 +2,7 @@ package com.ataccama.test.testtask.repository.impl;
 
 import com.ataccama.test.testtask.model.DBConnection;
 import com.ataccama.test.testtask.model.metadata.*;
-import com.ataccama.test.testtask.model.metadata.DBColumn;
 import com.ataccama.test.testtask.model.metadata.postgresql.PgDbColumn;
-import com.ataccama.test.testtask.model.metadata.DBTable;
 import com.ataccama.test.testtask.model.metadata.postgresql.PgDbSchema;
 import com.ataccama.test.testtask.model.metadata.postgresql.PgDbTable;
 import org.springframework.beans.factory.annotation.Qualifier;

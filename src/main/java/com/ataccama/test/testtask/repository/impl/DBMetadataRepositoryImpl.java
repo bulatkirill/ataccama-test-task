@@ -29,7 +29,7 @@ public abstract class DBMetadataRepositoryImpl implements DBMetadataRepository {
     public List<DBSchema> findAllSchemas(DBConnection dbConnection) throws SQLException {
         List<DBSchema> result = new ArrayList<>();
         Connection conn = dbConnectionFactory.getConnection(dbConnection);
-        try (Statement statement = conn.createStatement();) {
+        try (Statement statement = conn.createStatement()) {
             ResultSet rs = statement.executeQuery(findAllSchemaQueryString(dbConnection));
             while (rs.next()) {
                 result.add(extractDbSchema(rs));
@@ -50,7 +50,7 @@ public abstract class DBMetadataRepositoryImpl implements DBMetadataRepository {
     public List<DBTable> findAllTables(DBConnection dbConnection, String schemaName) throws SQLException {
         List<DBTable> result = new ArrayList<>();
         Connection conn = dbConnectionFactory.getConnection(dbConnection);
-        try (Statement statement = conn.createStatement();) {
+        try (Statement statement = conn.createStatement()) {
             ResultSet rs = statement.executeQuery(findAllTablesQueryString(dbConnection, schemaName));
             while (rs.next()) {
                 result.add(extractDbTable(rs));
@@ -71,7 +71,7 @@ public abstract class DBMetadataRepositoryImpl implements DBMetadataRepository {
     public List<DBColumn> findAllColumns(DBConnection dbConnection, String schemaName, String tableName) throws SQLException {
         List<DBColumn> result = new ArrayList<>();
         Connection conn = dbConnectionFactory.getConnection(dbConnection);
-        try (Statement statement = conn.createStatement();) {
+        try (Statement statement = conn.createStatement()) {
             ResultSet rs = statement.executeQuery(findAllColumnsQueryString(dbConnection, schemaName, tableName));
             while (rs.next()) {
                 result.add(extractDbColumn(rs));

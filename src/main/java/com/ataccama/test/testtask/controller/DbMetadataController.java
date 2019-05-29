@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController(value = "/api/v1/connection/{id}")
 public class DbMetadataController {
 
-    @Autowired
     private DBConnectionService dbConnectionService;
 
     @GetMapping("/schemas")
@@ -38,4 +37,8 @@ public class DbMetadataController {
 //        TODO
     }
 
+    @Autowired
+    public void setDbConnectionService(DBConnectionService dbConnectionService) {
+        this.dbConnectionService = dbConnectionService;
+    }
 }

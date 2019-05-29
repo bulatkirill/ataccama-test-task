@@ -23,7 +23,7 @@ public class MySqlDbMetadataRepositoryImpl extends DBMetadataRepositoryImpl {
     }
 
     @Override
-    protected DBSchema extractDbSchema(ResultSet resultSet) throws SQLException {
+    protected DBSchema extractDbSchema(ResultSet resultSet) {
         return null;
     }
 
@@ -33,7 +33,7 @@ public class MySqlDbMetadataRepositoryImpl extends DBMetadataRepositoryImpl {
     }
 
     @Override
-    protected DBTable extractDbTable(ResultSet resultSet) throws SQLException {
+    protected DBTable extractDbTable(ResultSet resultSet) {
         return null;
     }
 
@@ -43,7 +43,7 @@ public class MySqlDbMetadataRepositoryImpl extends DBMetadataRepositoryImpl {
     }
 
     @Override
-    protected DBColumn extractDbColumn(ResultSet resultSet) throws SQLException {
+    protected DBColumn extractDbColumn(ResultSet resultSet) {
         return null;
     }
 

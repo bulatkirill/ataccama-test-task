@@ -13,9 +13,8 @@ import java.util.List;
 @Service
 public class DBConnectionServiceImpl implements DBConnectionService {
 
-    @Autowired
     private DBConnectionRepository dbConnectionRepository;
-    @Autowired
+
     private DBConnectionValidationService dbConnectionValidationService;
 
     @Override
@@ -53,5 +52,15 @@ public class DBConnectionServiceImpl implements DBConnectionService {
     @Override
     public void deleteAll() {
         dbConnectionRepository.deleteAll();
+    }
+
+    @Autowired
+    public void setDbConnectionRepository(DBConnectionRepository dbConnectionRepository) {
+        this.dbConnectionRepository = dbConnectionRepository;
+    }
+
+    @Autowired
+    public void setDbConnectionValidationService(DBConnectionValidationService dbConnectionValidationService) {
+        this.dbConnectionValidationService = dbConnectionValidationService;
     }
 }

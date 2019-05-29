@@ -12,13 +12,13 @@ import java.util.Map;
 
 public interface DbMetadataService {
 
-    List<DBSchema> findAllSchemas(DBConnection dbConnection) throws SQLException, UnsupportedProviderException;
+    List<DBSchema> findAllSchemas(DBConnection dbConnection) throws UnsupportedProviderException;
 
-    List<DBTable> findAllTables(DBConnection dbConnection, String schemaName) throws SQLException, UnsupportedProviderException;
+    List<DBTable> findAllTables(DBConnection dbConnection, String schemaName) throws UnsupportedProviderException;
 
-    List<DBColumn> findAllColumns(DBConnection dbConnection, String schemaName, String tableId) throws SQLException, UnsupportedProviderException;
+    List<DBColumn> findAllColumns(DBConnection dbConnection, String schemaName, String tableId) throws UnsupportedProviderException;
 
-    List<Map<String, Object>> findAllData(DBConnection dbConnection, String schemaName, String tableId) throws SQLException, UnsupportedProviderException;
+    List<Map<String, Object>> findAllData(DBConnection dbConnection, String schemaName, String tableId) throws UnsupportedProviderException;
 
 
 }

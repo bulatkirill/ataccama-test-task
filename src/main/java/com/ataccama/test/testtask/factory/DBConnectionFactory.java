@@ -18,7 +18,7 @@ public class DBConnectionFactory {
 
     private static final String JDBC = "jdbc";
     private static final String COLON = ":";
-    private static Map<DBConnection, Connection> cachedConnections = new HashMap<>();
+    private static final Map<DBConnection, Connection> cachedConnections = new HashMap<>();
 
     public Connection getConnection(DBConnection dbConnection) throws SQLException {
         Connection connection = cachedConnections.get(dbConnection);

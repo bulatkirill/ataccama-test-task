@@ -24,10 +24,9 @@ public class DbMetadataServiceImpl implements DbMetadataService {
 
     private static final Logger logger = LoggerFactory.getLogger(DbMetadataServiceImpl.class);
 
-    @Autowired
     private List<DBMetadataRepository> dbMetadataRepositories;
 
-    private static Map<String, DBMetadataRepository> repositoryMap = new HashMap<>();
+    private static final Map<String, DBMetadataRepository> repositoryMap = new HashMap<>();
 
     @PostConstruct
     public void postConstruct() {
@@ -88,5 +87,10 @@ public class DbMetadataServiceImpl implements DbMetadataService {
             throw e;
         }
         return repository;
+    }
+
+    @Autowired
+    public void setDbMetadataRepositories(List<DBMetadataRepository> dbMetadataRepositories) {
+        this.dbMetadataRepositories = dbMetadataRepositories;
     }
 }

@@ -11,7 +11,6 @@ import java.util.List;
 @RestController(value = "/connection")
 public class DBConnectionController {
 
-    @Autowired
     private DBConnectionService dbConnectionService;
 
     @GetMapping
@@ -44,4 +43,8 @@ public class DBConnectionController {
         dbConnectionService.delete(id);
     }
 
+    @Autowired
+    public void setDbConnectionService(DBConnectionService dbConnectionService) {
+        this.dbConnectionService = dbConnectionService;
+    }
 }
