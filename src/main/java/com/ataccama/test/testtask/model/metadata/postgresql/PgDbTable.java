@@ -1,8 +1,8 @@
-package com.ataccama.test.testtask.model.metadata;
+package com.ataccama.test.testtask.model.metadata.postgresql;
 
 import com.ataccama.test.testtask.model.metadata.DBTable;
 
-public class PostgresqlDbTable extends DBTable {
+public class PgDbTable extends DBTable {
 
     private String catalog;
     private String schema;
@@ -16,16 +16,16 @@ public class PostgresqlDbTable extends DBTable {
     private Boolean isTyped;
     private String commitAction;
 
-    public PostgresqlDbTable(String name, String catalog,
-                             String schema, String type,
-                             String selfReferencingColumnName,
-                             String referenceGeneration,
-                             String userDefinedTypeCatalog,
-                             String userDefinedTypeSchema,
-                             String userDefinedTypeName,
-                             Boolean isInsertableInto,
-                             Boolean isTyped,
-                             String commitAction) {
+    public PgDbTable(String name, String catalog,
+                     String schema, String type,
+                     String selfReferencingColumnName,
+                     String referenceGeneration,
+                     String userDefinedTypeCatalog,
+                     String userDefinedTypeSchema,
+                     String userDefinedTypeName,
+                     Boolean isInsertableInto,
+                     Boolean isTyped,
+                     String commitAction) {
         super(name);
         this.catalog = catalog;
         this.schema = schema;

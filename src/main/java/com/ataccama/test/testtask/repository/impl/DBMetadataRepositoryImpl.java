@@ -2,10 +2,13 @@ package com.ataccama.test.testtask.repository.impl;
 
 import com.ataccama.test.testtask.factory.DBConnectionFactory;
 import com.ataccama.test.testtask.model.DBConnection;
-import com.ataccama.test.testtask.model.metadata.*;
+import com.ataccama.test.testtask.model.metadata.DBColumn;
+import com.ataccama.test.testtask.model.metadata.DBSchema;
+import com.ataccama.test.testtask.model.metadata.DBTable;
 import com.ataccama.test.testtask.repository.DBMetadataRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,97 +16,85 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Repository
-public class DBMetadataRepositoryImpl implements DBMetadataRepository {
+public abstract class DBMetadataRepositoryImpl implements DBMetadataRepository {
 
-    private static final String NSPNAME = "nspname";
-    private static final String NSPOWNER = "nspowner";
+    private static final String SELECT_ALL_FROM = "SELECT * FROM %s.%s";
+
+    private static final Logger logger = LoggerFactory.getLogger(DBMetadataRepositoryImpl.class);
 
     @Autowired
     private DBConnectionFactory dbConnectionFactory;
 
-
     @Override
-    public List<DBSchema> findAllSchemas(DBConnection dbConnection) {
+    public List<DBSchema> findAllSchemas(DBConnection dbConnection) throws SQLException {
         List<DBSchema> result = new ArrayList<>();
         Connection conn = dbConnectionFactory.getConnection(dbConnection);
         try (Statement statement = conn.createStatement();) {
-            ResultSet rs = statement.executeQuery("select nspname, nspowner from pg_catalog.pg_namespace");
+            ResultSet rs = statement.executeQuery(findAllSchemaQueryString(dbConnection));
             while (rs.next()) {
-                result.add(new DBSchema(rs.getString(NSPNAME), rs.getString(NSPOWNER)));
+                result.add(extractDbSchema(rs));
             }
         } catch (SQLException e) {
-//            TODO logger
-            e.printStackTrace();
+            logger.error("Error happened while selecting schemas from database = " +
+                    dbConnection.getDbName() + " with id = " + dbConnection.getId(), e);
+            throw e;
         }
         return result;
     }
 
+    protected abstract String findAllSchemaQueryString(DBConnection dbConnection);
+
+    protected abstract DBSchema extractDbSchema(ResultSet resultSet) throws SQLException;
+
     @Override
-    public List<DBTable> findAllTables(DBConnection dbConnection, String schemaName) {
+    public List<DBTable> findAllTables(DBConnection dbConnection, String schemaName) throws SQLException {
         List<DBTable> result = new ArrayList<>();
         Connection conn = dbConnectionFactory.getConnection(dbConnection);
         try (Statement statement = conn.createStatement();) {
-            ResultSet rs = statement.executeQuery("select * from information_schema.tables where table_schema = '" + schemaName + "'");
+            ResultSet rs = statement.executeQuery(findAllTablesQueryString(dbConnection, schemaName));
             while (rs.next()) {
-                result.add(new PostgresqlDbTable(
-                        rs.getString("table_name"),
-                        rs.getString("table_catalog"),
-                        rs.getString("table_schema"),
-                        rs.getString("table_type"),
-                        rs.getString("self_referencing_column_name"),
-                        rs.getString("reference_generation"),
-                        rs.getString("user_defined_type_catalog"),
-                        rs.getString("user_defined_type_schema"),
-                        rs.getString("user_defined_type_name"),
-                        rs.getBoolean("is_insertable_into"),
-                        rs.getBoolean("is_typed"),
-                        rs.getString("commit_action")
-                ));
+                result.add(extractDbTable(rs));
             }
         } catch (SQLException e) {
-//            TODO logger
-            e.printStackTrace();
+            logger.error("Error happened while selecting all tables from database = " +
+                    dbConnection.getDbName() + " with id = " + dbConnection.getId() + ", schema = " + schemaName, e);
+            throw e;
         }
         return result;
     }
 
+    protected abstract String findAllTablesQueryString(DBConnection dbConnection, String schemaName);
+
+    protected abstract DBTable extractDbTable(ResultSet resultSet) throws SQLException;
+
     @Override
-    public List<DBColumn> findAllColumns(DBConnection dbConnection, String schemaName, String tableName) {
+    public List<DBColumn> findAllColumns(DBConnection dbConnection, String schemaName, String tableName) throws SQLException {
         List<DBColumn> result = new ArrayList<>();
         Connection conn = dbConnectionFactory.getConnection(dbConnection);
         try (Statement statement = conn.createStatement();) {
-            ResultSet rs = statement.executeQuery("SELECT * FROM information_schema.columns WHERE table_schema = '"
-                    + schemaName + "' AND  table_name = '" + tableName + "'");
+            ResultSet rs = statement.executeQuery(findAllColumnsQueryString(dbConnection, schemaName, tableName));
             while (rs.next()) {
-//                TODO
-                result.add(new PostgresqlDbColumn(
-                        rs.getString("table_schema"),
-                        rs.getString("table_name"),
-                        rs.getString("column_name"),
-                        rs.getString("data_type"),
-                        rs.getString("column_default"),
-                        rs.getBoolean("is_nullable"),
-                        rs.getInt("character_maximum_length"),
-                        rs.getInt("numeric_precision"),
-                        rs.getInt("numeric_precision_radix"),
-                        rs.getBoolean("is_updatable"),
-                        rs.getInt("ordinal_position")
-                ));
+                result.add(extractDbColumn(rs));
             }
         } catch (SQLException e) {
-//            TODO logger
-            e.printStackTrace();
+            logger.error("Error happened while selecting all columns from database = " +
+                    dbConnection.getDbName() + ", with id = " + dbConnection.getId() +
+                    ", schema = " + schemaName + ", table name = " + tableName, e);
+            throw e;
         }
         return result;
     }
 
+    protected abstract String findAllColumnsQueryString(DBConnection dbConnection, String schemaName, String tableName);
+
+    protected abstract DBColumn extractDbColumn(ResultSet resultSet) throws SQLException;
+
     @Override
-    public List<Map<String, Object>> findAllData(DBConnection dbConnection, String schemaName, String tableId) {
+    public final List<Map<String, Object>> findAllData(DBConnection dbConnection, String schemaName, String tableName) throws SQLException {
         List<Map<String, Object>> result = new ArrayList<>();
         Connection conn = dbConnectionFactory.getConnection(dbConnection);
-        try (Statement statement = conn.createStatement();) {
-            ResultSet rs = statement.executeQuery("SELECT * FROM " + schemaName + "." + tableId);
+        try (Statement statement = conn.createStatement()) {
+            ResultSet rs = statement.executeQuery(String.format(SELECT_ALL_FROM, schemaName, tableName));
             while (rs.next()) {
                 Map<String, Object> row = new HashMap<>();
                 ResultSetMetaData rsmd = rs.getMetaData();
@@ -113,10 +104,13 @@ public class DBMetadataRepositoryImpl implements DBMetadataRepository {
                     Object columnValue = rs.getObject(columnName);
                     row.put(columnName, columnValue);
                 }
+                result.add(row);
             }
         } catch (SQLException e) {
-//            TODO logger
-            e.printStackTrace();
+            logger.error("Error happened while selecting all data from database = " +
+                    dbConnection.getDbName() + ", with id = " + dbConnection.getId() +
+                    ", schema = " + schemaName + ", table name = " + tableName, e);
+            throw e;
         }
         return result;
     }
