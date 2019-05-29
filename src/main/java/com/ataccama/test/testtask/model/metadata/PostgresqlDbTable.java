@@ -1,4 +1,4 @@
-package com.ataccama.test.testtask.model;
+package com.ataccama.test.testtask.model.metadata;
 
 import com.ataccama.test.testtask.model.metadata.DBTable;
 

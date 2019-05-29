@@ -18,6 +18,6 @@ public interface DBMetadataRepository {
 
     List<DBColumn> findAllColumns(DBConnection dbConnection, String schemaName, String tableId);
 
-    List<Map<String, String>> findAllData(DBConnection dbConnection, String schemaName, String tableId);
+    List<Map<String, Object>> findAllData(DBConnection dbConnection, String schemaName, String tableId);
 
 }
