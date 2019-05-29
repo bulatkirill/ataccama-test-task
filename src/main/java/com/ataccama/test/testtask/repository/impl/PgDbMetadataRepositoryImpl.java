@@ -14,11 +14,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Repository
-@Qualifier("PostgresqlDbMetadataRepositoryImpl")
+@Qualifier("PgDbMetadataRepositoryImpl")
 public class PgDbMetadataRepositoryImpl extends DBMetadataRepositoryImpl {
 
     private static final String NSPNAME = "nspname";
     private static final String NSPOWNER = "nspowner";
+    private static final String POSTGRESQL = "postgresql";
 
     @Override
     protected String findAllSchemaQueryString(DBConnection dbConnection) {
@@ -77,4 +78,8 @@ public class PgDbMetadataRepositoryImpl extends DBMetadataRepositoryImpl {
     }
 
 
+    @Override
+    public String getProvider() {
+        return POSTGRESQL;
+    }
 }

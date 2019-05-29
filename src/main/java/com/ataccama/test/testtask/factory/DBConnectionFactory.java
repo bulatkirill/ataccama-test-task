@@ -1,6 +1,8 @@
 package com.ataccama.test.testtask.factory;
 
 import com.ataccama.test.testtask.model.DBConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -12,22 +14,27 @@ import java.util.Map;
 @Component
 public class DBConnectionFactory {
 
+    private static final Logger logger = LoggerFactory.getLogger(DBConnectionFactory.class);
+
     private static final String JDBC = "jdbc";
     private static final String COLON = ":";
     private static Map<DBConnection, Connection> cachedConnections = new HashMap<>();
 
-    public Connection getConnection(DBConnection dbConnection) {
+    public Connection getConnection(DBConnection dbConnection) throws SQLException {
         Connection connection = cachedConnections.get(dbConnection);
+        String dbConnectionString = null;
         if (connection != null) {
             return connection;
         } else {
             try {
-                connection = DriverManager.getConnection(getDbConnectionString(dbConnection),
+                dbConnectionString = getDbConnectionString(dbConnection);
+                connection = DriverManager.getConnection(dbConnectionString,
                         dbConnection.getUsername(),
                         dbConnection.getPassword());
             } catch (SQLException e) {
-//                TODO logger, cannot connect to specified database, throw new exception and so on
-                e.printStackTrace();
+                logger.error("Connection to the database with id = " + dbConnection.getId() +
+                        "was not successful. Connection string = " + dbConnectionString, e);
+                throw e;
             }
             cachedConnections.put(dbConnection, connection);
         }

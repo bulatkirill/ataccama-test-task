@@ -20,4 +20,5 @@ public interface DBMetadataRepository {
 
     List<Map<String, Object>> findAllData(DBConnection dbConnection, String schemaName, String tableId) throws SQLException;
 
+    String getProvider();
 }
