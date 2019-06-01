@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController(value = "/connection")
+@RestController
+@RequestMapping("/connection")
 public class DBConnectionController {
 
     private DBConnectionService dbConnectionService;
@@ -23,9 +24,9 @@ public class DBConnectionController {
         return dbConnectionService.findById(id);
     }
 
-    @GetMapping("/{name}")
-    public DBConnection getConnection(@PathVariable("name") String name) {
-        return dbConnectionService.findByName(name);
+    @GetMapping(params = "dbName")
+    public DBConnection getConnection(@RequestParam("dbName") String dbName) {
+        return dbConnectionService.findByName(dbName);
     }
 
     @PostMapping

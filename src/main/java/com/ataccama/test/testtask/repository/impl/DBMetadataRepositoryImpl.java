@@ -90,7 +90,19 @@ public abstract class DBMetadataRepositoryImpl implements DBMetadataRepository {
     protected abstract DBColumn extractDbColumn(ResultSet resultSet) throws SQLException;
 
     @Override
+    public final List<Map<String, Object>> findDataPreview(DBConnection dbConnection,
+                                                           String schemaName,
+                                                           String tableName,
+                                                           Integer count) throws SQLException {
+        return findAllDataCommon(dbConnection, schemaName, tableName, count);
+    }
+
+    @Override
     public final List<Map<String, Object>> findAllData(DBConnection dbConnection, String schemaName, String tableName) throws SQLException {
+        return findAllDataCommon(dbConnection, schemaName, tableName, null);
+    }
+
+    private List<Map<String, Object>> findAllDataCommon(DBConnection dbConnection, String schemaName, String tableName, Integer count) throws SQLException {
         List<Map<String, Object>> result = new ArrayList<>();
         Connection conn = dbConnectionFactory.getConnection(dbConnection);
         try (Statement statement = conn.createStatement()) {

@@ -14,11 +14,21 @@ public interface DBMetadataRepository {
 
     List<DBSchema> findAllSchemas(DBConnection dbConnection) throws SQLException;
 
-    List<DBTable> findAllTables(DBConnection dbConnection, String schemaName) throws SQLException;
+    List<DBTable> findAllTables(DBConnection dbConnection,
+                                String schemaName) throws SQLException;
 
-    List<DBColumn> findAllColumns(DBConnection dbConnection, String schemaName, String tableId) throws SQLException;
+    List<DBColumn> findAllColumns(DBConnection dbConnection,
+                                  String schemaName,
+                                  String tableId) throws SQLException;
 
-    List<Map<String, Object>> findAllData(DBConnection dbConnection, String schemaName, String tableId) throws SQLException;
+    List<Map<String, Object>> findDataPreview(DBConnection dbConnection,
+                                          String schemaName,
+                                          String tableId,
+                                          Integer count) throws SQLException;
+
+    List<Map<String, Object>> findAllData(DBConnection dbConnection,
+                                          String schemaName,
+                                          String tableId) throws SQLException;
 
     String getProvider();
 }

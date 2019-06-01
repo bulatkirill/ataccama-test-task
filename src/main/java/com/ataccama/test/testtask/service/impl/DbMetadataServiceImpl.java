@@ -7,6 +7,7 @@ import com.ataccama.test.testtask.model.metadata.DBColumn;
 import com.ataccama.test.testtask.model.metadata.DBSchema;
 import com.ataccama.test.testtask.model.metadata.DBTable;
 import com.ataccama.test.testtask.repository.DBMetadataRepository;
+import com.ataccama.test.testtask.service.DBConnectionService;
 import com.ataccama.test.testtask.service.DbMetadataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,8 @@ public class DbMetadataServiceImpl implements DbMetadataService {
 
     private static final Logger logger = LoggerFactory.getLogger(DbMetadataServiceImpl.class);
 
+    private DBConnectionService dbConnectionService;
+
     private List<DBMetadataRepository> dbMetadataRepositories;
 
     private static final Map<String, DBMetadataRepository> repositoryMap = new HashMap<>();
@@ -36,7 +39,8 @@ public class DbMetadataServiceImpl implements DbMetadataService {
     }
 
     @Override
-    public List<DBSchema> findAllSchemas(DBConnection dbConnection) throws UnsupportedProviderException {
+    public List<DBSchema> findAllSchemas(Long dbConnectionId) throws UnsupportedProviderException {
+        DBConnection dbConnection = getConnection(dbConnectionId);
         try {
             return getRepository(dbConnection.getProvider()).findAllSchemas(dbConnection);
         } catch (SQLException e) {
@@ -46,7 +50,8 @@ public class DbMetadataServiceImpl implements DbMetadataService {
     }
 
     @Override
-    public List<DBTable> findAllTables(DBConnection dbConnection, String schemaName) throws UnsupportedProviderException {
+    public List<DBTable> findAllTables(Long dbConnectionId, String schemaName) throws UnsupportedProviderException {
+        DBConnection dbConnection = getConnection(dbConnectionId);
         try {
             return getRepository(dbConnection.getProvider()).findAllTables(dbConnection, schemaName);
         } catch (SQLException e) {
@@ -57,7 +62,8 @@ public class DbMetadataServiceImpl implements DbMetadataService {
     }
 
     @Override
-    public List<DBColumn> findAllColumns(DBConnection dbConnection, String schemaName, String tableName) throws UnsupportedProviderException {
+    public List<DBColumn> findAllColumns(Long dbConnectionId, String schemaName, String tableName) throws UnsupportedProviderException {
+        DBConnection dbConnection = getConnection(dbConnectionId);
         try {
             return getRepository(dbConnection.getProvider()).findAllColumns(dbConnection, schemaName, tableName);
         } catch (SQLException e) {
@@ -68,11 +74,29 @@ public class DbMetadataServiceImpl implements DbMetadataService {
     }
 
     @Override
-    public List<Map<String, Object>> findAllData(DBConnection dbConnection, String schemaName, String tableName) throws UnsupportedProviderException {
+    public List<Map<String, Object>> findDataPreview(Long dbConnectionId,
+                                                     String schemaName,
+                                                     String tableName,
+                                                     Integer count) throws UnsupportedProviderException {
+        DBConnection dbConnection = getConnection(dbConnectionId);
         try {
             return getRepository(dbConnection.getProvider()).findAllData(dbConnection, schemaName, tableName);
         } catch (SQLException e) {
             logger.error("Process of selecting data preview failed for database connection with id = {}, schema = {} and table = {}",
+                    dbConnection.getId(), schemaName, tableName);
+            throw new BusinessException("Operation failed. Try again later.");
+        }
+    }
+
+    @Override
+    public List<Map<String, Object>> findAllData(Long dbConnectionId,
+                                                 String schemaName,
+                                                 String tableName) throws UnsupportedProviderException {
+        DBConnection dbConnection = getConnection(dbConnectionId);
+        try {
+            return getRepository(dbConnection.getProvider()).findAllData(dbConnection, schemaName, tableName);
+        } catch (SQLException e) {
+            logger.error("Process of selecting all data failed for database connection with id = {}, schema = {} and table = {}",
                     dbConnection.getId(), schemaName, tableName);
             throw new BusinessException("Operation failed. Try again later.");
         }
@@ -89,8 +113,22 @@ public class DbMetadataServiceImpl implements DbMetadataService {
         return repository;
     }
 
+    private DBConnection getConnection(Long dbConnectionId) {
+        DBConnection dbConnection = dbConnectionService.findById(dbConnectionId);
+        if (dbConnection == null) {
+            logger.error("DB connection with specified id = {} is not in the database.", dbConnectionId);
+            throw new BusinessException("Operation failed due to incorrect connection id.");
+        }
+        return dbConnection;
+    }
+
     @Autowired
     public void setDbMetadataRepositories(List<DBMetadataRepository> dbMetadataRepositories) {
         this.dbMetadataRepositories = dbMetadataRepositories;
+    }
+
+    @Autowired
+    public void setDbConnectionRepository(DBConnectionService dbConnectionService) {
+        this.dbConnectionService = dbConnectionService;
     }
 }
