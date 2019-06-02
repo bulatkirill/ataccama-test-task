@@ -10,10 +10,11 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 
 /**
- * TBD
+ * Concrete implementation of the MySql database provider for providing different SQL metadata operations
+ * Methods are not implemented and class exists only to show a way to extend application in future versions
  */
-@Repository
-@Qualifier("MySqlDbMetadataRepositoryImpl")
+//@Repository
+//@Qualifier("MySqlDbMetadataRepositoryImpl")
 public class MySqlDbMetadataRepositoryImpl extends DBMetadataRepositoryImpl {
 
     @Override
@@ -43,6 +44,11 @@ public class MySqlDbMetadataRepositoryImpl extends DBMetadataRepositoryImpl {
 
     @Override
     protected DBColumn extractDbColumn(ResultSet resultSet) {
+        return null;
+    }
+
+    @Override
+    protected String getDataQueryString(DBConnection dbConnection, String schemaName, String tableName) {
         return null;
     }
 

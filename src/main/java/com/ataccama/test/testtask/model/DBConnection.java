@@ -4,7 +4,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Objects;
 
+/**
+ * Object to hold properties of the database connection
+ */
 @Entity
 public class DBConnection {
 
@@ -140,5 +144,26 @@ public class DBConnection {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DBConnection that = (DBConnection) o;
+        return id.equals(that.id) &&
+                Objects.equals(name, that.name) &&
+                provider.equals(that.provider) &&
+                host.equals(that.host) &&
+                Objects.equals(port, that.port) &&
+                dbName.equals(that.dbName) &&
+                Objects.equals(queryParams, that.queryParams) &&
+                username.equals(that.username) &&
+                password.equals(that.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, provider, host, port, dbName, queryParams, username, password);
     }
 }

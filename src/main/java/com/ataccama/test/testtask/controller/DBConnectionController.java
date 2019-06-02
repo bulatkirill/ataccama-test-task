@@ -4,6 +4,7 @@ import com.ataccama.test.testtask.model.DBConnection;
 import com.ataccama.test.testtask.model.exception.ValidationException;
 import com.ataccama.test.testtask.service.DBConnectionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,12 +30,12 @@ public class DBConnectionController {
         return dbConnectionService.findByName(dbName);
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public DBConnection addConnection(@RequestBody DBConnection dbConnection) throws ValidationException {
         return dbConnectionService.add(dbConnection);
     }
 
-    @PutMapping
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public DBConnection updateConnection(@RequestBody DBConnection dbConnection) throws ValidationException {
         return dbConnectionService.update(dbConnection);
     }

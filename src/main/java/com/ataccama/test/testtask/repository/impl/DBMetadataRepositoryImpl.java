@@ -16,13 +16,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Basic implementation of the SQL operations specified in the interface {@link DBMetadataRepository}
+ * This class has to be extended for each database provider in order to provide correct SQL questions and the way to
+ * work with results of those SQL questions
+ */
 public abstract class DBMetadataRepositoryImpl implements DBMetadataRepository {
 
-    private static final String SELECT_ALL_FROM = "SELECT * FROM %s.%s";
+    static final String SELECT_ALL_FROM = "SELECT * FROM %s.%s";
 
     private static final Logger logger = LoggerFactory.getLogger(DBMetadataRepositoryImpl.class);
 
-    @Autowired
     private DBConnectionFactory dbConnectionFactory;
 
     @Override
@@ -42,8 +46,22 @@ public abstract class DBMetadataRepositoryImpl implements DBMetadataRepository {
         return result;
     }
 
+    /**
+     * Method has to implemented by database providers in order to provide SQL query for selecting all schemas form its database
+     *
+     * @param dbConnection connection to use. In case any database provider needs it for creating a query
+     * @return SQL query string
+     */
     protected abstract String findAllSchemaQueryString(DBConnection dbConnection);
 
+    /**
+     * Method has to implemented by database providers in order to provide mechanism for processing
+     * result of database schemas selection
+     *
+     * @param resultSet result of the query
+     * @return processed result in form of the object
+     * @throws SQLException thrown in case of incorrect {@link ResultSet} operation
+     */
     protected abstract DBSchema extractDbSchema(ResultSet resultSet) throws SQLException;
 
     @Override
@@ -63,8 +81,23 @@ public abstract class DBMetadataRepositoryImpl implements DBMetadataRepository {
         return result;
     }
 
+    /**
+     * Method has to implemented by database providers in order to provide SQL query for selecting all tables form its database
+     *
+     * @param dbConnection database connection properties
+     * @param schemaName   name of the schema which tables has to be listed
+     * @return SQL query string
+     */
     protected abstract String findAllTablesQueryString(DBConnection dbConnection, String schemaName);
 
+    /**
+     * Method has to implemented by database providers in order to provide mechanism for processing
+     * result of database tables selection
+     *
+     * @param resultSet result of the query
+     * @return processed result
+     * @throws SQLException thrown in case of incorrect {@link ResultSet} operation
+     */
     protected abstract DBTable extractDbTable(ResultSet resultSet) throws SQLException;
 
     @Override
@@ -85,20 +118,36 @@ public abstract class DBMetadataRepositoryImpl implements DBMetadataRepository {
         return result;
     }
 
+    /**
+     * Method has to implemented by database providers in order to provide SQL query for selecting all columns from its database
+     *
+     * @param dbConnection database connection properties
+     * @param schemaName   name of the schema which contains a table
+     * @param tableName    name of the table which columns has to be selected
+     * @return SQL query string
+     */
     protected abstract String findAllColumnsQueryString(DBConnection dbConnection, String schemaName, String tableName);
 
+    /**
+     * Method has to implemented by database providers in order to provide mechanism for processing
+     * result of database columns selection
+     *
+     * @param resultSet result of the query
+     * @return processed result
+     * @throws SQLException thrown in case of incorrect {@link ResultSet} operation
+     */
     protected abstract DBColumn extractDbColumn(ResultSet resultSet) throws SQLException;
 
     @Override
-    public final List<Map<String, Object>> findDataPreview(DBConnection dbConnection,
-                                                           String schemaName,
-                                                           String tableName,
-                                                           Integer count) throws SQLException {
+    public List<Map<String, Object>> findDataPreview(DBConnection dbConnection,
+                                                     String schemaName,
+                                                     String tableName,
+                                                     Integer count) throws SQLException {
         return findAllDataCommon(dbConnection, schemaName, tableName, count);
     }
 
     @Override
-    public final List<Map<String, Object>> findAllData(DBConnection dbConnection, String schemaName, String tableName) throws SQLException {
+    public List<Map<String, Object>> findAllData(DBConnection dbConnection, String schemaName, String tableName) throws SQLException {
         return findAllDataCommon(dbConnection, schemaName, tableName, null);
     }
 
@@ -106,17 +155,18 @@ public abstract class DBMetadataRepositoryImpl implements DBMetadataRepository {
         List<Map<String, Object>> result = new ArrayList<>();
         Connection conn = dbConnectionFactory.getConnection(dbConnection);
         try (Statement statement = conn.createStatement()) {
-            ResultSet rs = statement.executeQuery(String.format(SELECT_ALL_FROM, schemaName, tableName));
-            while (rs.next()) {
+            ResultSet rs = statement.executeQuery(getDataQueryString(dbConnection, schemaName, tableName));
+            while (rs.next() && count > 0) {
                 Map<String, Object> row = new HashMap<>();
                 ResultSetMetaData rsmd = rs.getMetaData();
                 int columnsCount = rsmd.getColumnCount();
-                for (int i = 0; i < columnsCount; i++) {
+                for (int i = 1; i < columnsCount; i++) {
                     String columnName = rsmd.getColumnName(i);
                     Object columnValue = rs.getObject(columnName);
                     row.put(columnName, columnValue);
                 }
                 result.add(row);
+                count--;
             }
         } catch (SQLException e) {
             logger.error("Error happened while selecting all data from database = " +
@@ -125,5 +175,12 @@ public abstract class DBMetadataRepositoryImpl implements DBMetadataRepository {
             throw e;
         }
         return result;
+    }
+
+    protected abstract String getDataQueryString(DBConnection dbConnection, String schemaName, String tableName);
+
+    @Autowired
+    public void setDbConnectionFactory(DBConnectionFactory dbConnectionFactory) {
+        this.dbConnectionFactory = dbConnectionFactory;
     }
 }

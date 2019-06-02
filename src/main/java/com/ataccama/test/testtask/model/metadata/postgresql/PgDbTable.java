@@ -2,6 +2,9 @@ package com.ataccama.test.testtask.model.metadata.postgresql;
 
 import com.ataccama.test.testtask.model.metadata.DBTable;
 
+/**
+ * Object to represent database table and its properties in Postgresql database
+ */
 public class PgDbTable extends DBTable {
 
     private String catalog;

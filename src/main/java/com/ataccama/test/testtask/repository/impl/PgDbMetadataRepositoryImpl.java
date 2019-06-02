@@ -11,6 +11,9 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Concrete implementation of the PostreSql database provider for providing different SQL metadata operations
+ */
 @Repository
 @Qualifier("PgDbMetadataRepositoryImpl")
 public class PgDbMetadataRepositoryImpl extends DBMetadataRepositoryImpl {
@@ -73,6 +76,11 @@ public class PgDbMetadataRepositoryImpl extends DBMetadataRepositoryImpl {
                 resultSet.getBoolean("is_updatable"),
                 resultSet.getInt("ordinal_position")
         );
+    }
+
+    @Override
+    protected String getDataQueryString(DBConnection dbConnection, String schemaName, String tableName) {
+        return String.format(SELECT_ALL_FROM, schemaName, tableName);
     }
 
 

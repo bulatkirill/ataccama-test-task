@@ -1,5 +1,10 @@
 package com.ataccama.test.testtask.model.metadata;
 
+/**
+ * Basic representation of database column.
+ * Contains basic properties of a column representation of different database providers
+ * Can be extended to add properties for concrete database provider
+ */
 public class DBColumn {
 
 
@@ -23,7 +28,7 @@ public class DBColumn {
 
     private Boolean isUpdatable;
 
-    public DBColumn() {
+    protected DBColumn() {
     }
 
     public DBColumn(String schema, String table, String name, String dataType, String defaultValue,

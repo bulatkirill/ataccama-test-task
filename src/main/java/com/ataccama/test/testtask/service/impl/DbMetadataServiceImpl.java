@@ -20,6 +20,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Basic implementation of the service. Uses different database metadata
+ * repositories to access data depending on the provider of specified database connection
+ */
 @Service
 public class DbMetadataServiceImpl implements DbMetadataService {
 
@@ -27,10 +31,19 @@ public class DbMetadataServiceImpl implements DbMetadataService {
 
     private DBConnectionService dbConnectionService;
 
+    /**
+     * List of all possible repositories for accessing metadata of the database. Autowired by spring
+     */
     private List<DBMetadataRepository> dbMetadataRepositories;
 
+    /**
+     * Map contains different autowired repositories. As a key used the name of the provider of the database
+     */
     private static final Map<String, DBMetadataRepository> repositoryMap = new HashMap<>();
 
+    /**
+     * Initialize a map of repositories after al dependencies are provided
+     */
     @PostConstruct
     public void postConstruct() {
         for (DBMetadataRepository repository : dbMetadataRepositories) {
@@ -80,7 +93,7 @@ public class DbMetadataServiceImpl implements DbMetadataService {
                                                      Integer count) throws UnsupportedProviderException {
         DBConnection dbConnection = getConnection(dbConnectionId);
         try {
-            return getRepository(dbConnection.getProvider()).findAllData(dbConnection, schemaName, tableName);
+            return getRepository(dbConnection.getProvider()).findDataPreview(dbConnection, schemaName, tableName, count);
         } catch (SQLException e) {
             logger.error("Process of selecting data preview failed for database connection with id = {}, schema = {} and table = {}",
                     dbConnection.getId(), schemaName, tableName);

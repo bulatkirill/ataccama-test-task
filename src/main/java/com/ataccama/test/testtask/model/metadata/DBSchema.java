@@ -1,5 +1,10 @@
 package com.ataccama.test.testtask.model.metadata;
 
+/**
+ * Basic representation of database schema
+ * Contains basic properties of a schema representation of different database providers
+ * Can be extended to add properties for concrete database provider
+ */
 public class DBSchema {
 
     private String nspName;

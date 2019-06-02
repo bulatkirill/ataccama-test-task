@@ -2,13 +2,12 @@ package com.ataccama.test.testtask.model.metadata.postgresql;
 
 import com.ataccama.test.testtask.model.metadata.DBColumn;
 
+/**
+ * Object to represent database column and its properties in Postgresql database
+ */
 public class PgDbColumn extends DBColumn {
 
     private Integer ordinalPosition;
-
-    public PgDbColumn(Integer ordinalPosition) {
-        this.ordinalPosition = ordinalPosition;
-    }
 
     public PgDbColumn(String schema, String table, String name, String dataType, String defaultValue,
                       Boolean isNullable, Integer characterMaxLength, Integer numericPrecision,
