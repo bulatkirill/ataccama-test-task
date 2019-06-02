@@ -1,5 +1,5 @@
-# attacama-test-task
-attacama-test-task
+# ataccama-test-task
+ataccama-test-task
 
 Implementation of an interview task
 
