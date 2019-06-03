@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/assets :: headerFragment">
+    <title id="pageTitle">Detail dokumentu</title>
+</head>
+<body>
+<div th:replace="fragments/header :: header">...</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-xs-12" style="border-right: 1px solid #ccc;">
+            <table class="table table-hover" id="dev-table">
+                <thead>
+                <tr>
+                    <th colspan="2">
+                        Detail dokumentu
+                    </th>
+                </tr>
+                </thead>
+                <tr th:if="${record.subject != null}">
+                    <th class="col-md-6">Název</th>
+                    <td th:text="${record.subject}" class="col-md-6"></td>
+                </tr>
+                <tr th:if="${record.recordType != null}">
+                    <th>Typ</th>
+                    <div th:replace="fragments/recordType :: recordType
+                            (recordType=${record.recordType.toString()})">...
+                    </div>
+                </tr>
+                <tr th:if="${record.amountCZK != null}">
+                    <th>Částka</th>
+                    <td th:text="${record.amountCZK}">...</td>
+                </tr>
+                <tr th:if="${record.currency != null}">
+                    <th>Měna</th>
+                    <td th:text="${record.currency}">...</td>
+                </tr>
+                <tr th:if="${record.variableSymbol != null}">
+                    <th>Variabilní symbol</th>
+                    <td th:text="${record.variableSymbol}">...</td>
+                </tr>
+                <tr th:if="${record.periodicity != null and not #strings.isEmpty(record.periodicity.toString())}">
+                    <th>Periodicita platby</th>
+                    <td th:replace="fragments/periodicity :: periodicity
+                            (val=${record.periodicity.toString()})"></td>
+                </tr>
+                <tr th:if="${record.authorityRole != null}">
+                    <th>Role publikující strany</th>
+                    <div th:replace="fragments/authorityRole :: authorityRole
+                            (val=${record.authorityRole.toString()})"></div>
+                </tr>
+                <tr th:if="${record.budgetCategory != null}">
+                    <th>Popis</th>
+                    <td th:text="${record.budgetCategory}">...</td>
+                </tr>
+                <tr th:if="${record.masterId != null}">
+                    <th>Jednoznačný identifikátor dokumentu</th>
+                    <td th:text="${record.masterId}">...</td>
+                </tr>
+                <tr th:if="${record.retrieval != null and record.retrieval.date != null}">
+                    <th>Datum zpracování</th>
+                    <td th:text="${#dates.format(record.retrieval.date, 'dd-MM-yyyy')}"></td>
+                </tr>
+                <tr th:if="${record.dateOfPayment != null}">
+                    <th>Datum platby</th>
+                    <td th:text="${#dates.format(record.dateOfPayment, 'dd-MM-yyyy')}"></td>
+                </tr>
+                <tr th:if="${record.dateOfExpiry != null}">
+                    <th>Datum vypršení platnosti</th>
+                    <td th:text="${#dates.format(record.dateOfExpiry, 'dd-MM-yyyy')}"></td>
+                </tr>
+                <tr th:if="${record.dateCreated != null}">
+                    <th>Datum vytvoření dokumentu</th>
+                    <td th:text="${#dates.format(record.dateCreated, 'dd-MM-yyyy')}"></td>
+                </tr>
+                <tr th:if="${record.dueDate != null}">
+                    <th>Datum splatnosti</th>
+                    <td th:text="${#dates.format(record.dueDate, 'dd-MM-yyyy')}"></td>
+                </tr>
+                <tr th:if="${record.inEffect != null}">
+                    <th>Platí</th>
+                    <td>
+                        <div th:replace="fragments/trueFalseGlyphSwitch :: booleanGlyphicon
+                            (val=${record.inEffect})"></div>
+                    </td>
+                </tr>
+                <tr th:if="${record.authority != null and record.authority.name != null}">
+                    <th>Publikující organizace</th>
+                    <td th:text="${record.authority.name}">...</td>
+                </tr>
+                <tr th:if="${record.partner != null and record.partner.name != null}">
+                    <th>Související organizace</th>
+                    <td th:text="${record.partner.name}">...</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <div th:if="${record.authority != null}">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th colspan="2">
+                            Publikující organizace
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th class="col-md-6 col-xs-6">Název</th>
+                        <td class="col-md-6 col-xs-6">
+                            <a href="#" th:href="@{{entityDetailLink}/{entityId}(entityId=${record.authority.id},
+                        entityDetailLink=${organizationsLink})}" th:text="${record.authority.name}"></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>IČO</th>
+                        <td th:text="${record.authority.ico}"></td>
+                    </tr>
+                    <tr>
+                        <th>Typ</th>
+                        <div th:replace="fragments/entityType :: entityType
+                    (entityType=${record.authority.entityType.toString()})">...
+                        </div>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <table class="table table-hover">
+                <tbody>
+                <tr></tr>
+                </tbody>
+            </table>
+            <div th:if="${record.partner != null}">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th colspan="2">
+                            Související organizace
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th class="col-md-6 col-xs-6">Název</th>
+                        <td class="col-md-6 col-xs-6">
+                            <a href="#" th:href="@{{entityDetailLink}/{entityId}(entityId=${record.partner.id},
+                        entityDetailLink=${organizationsLink})}" th:text="${record.partner.name}"></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>IČO</th>
+                        <td th:text="${record.partner.ico}"></td>
+                    </tr>
+                    <tr>
+                        <th>Typ</th>
+                        <div th:replace="fragments/entityType :: entityType
+                    (entityType=${record.partner.entityType.toString()})">...
+                        </div>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

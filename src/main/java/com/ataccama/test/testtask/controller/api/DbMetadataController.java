@@ -1,4 +1,4 @@
-package com.ataccama.test.testtask.controller;
+package com.ataccama.test.testtask.controller.api;
 
 import com.ataccama.test.testtask.model.exception.UnsupportedProviderException;
 import com.ataccama.test.testtask.model.metadata.DBColumn;

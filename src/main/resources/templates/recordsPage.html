@@ -1,0 +1,117 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/assets :: headerFragment">
+    <title id="pageTitle">Dokumenty</title>
+</head>
+<body>
+<div th:replace="fragments/header :: header">...</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-2 col-xs-12">
+            <div class="col-md-12">
+                <h4>
+                    Typ dokumentu
+                </h4>
+            </div>
+            <ul class="list-unstyled">
+                <li class="col-md-12 col-xs-3">
+                    <input id="recordTypeInvoice" type="checkbox"
+                           name="recordType" value="invoice" th:checked="${recordTypeinvoice}"/>
+                    <span class="glyphicon glyphicon-file"></span>
+                    <label for="recordTypeInvoice">Faktura</label>
+                </li>
+                <li class="col-md-12 col-xs-3">
+                    <input id="recordTypePayment" type="checkbox"
+                           name="recordType" value="payment" th:checked="${recordTypepayment}"/>
+                    <span class="glyphicon glyphicon-eur"></span>
+                    <label for="recordTypePayment">Platba</label>
+                </li>
+                <li class="col-md-12 col-xs-3">
+                    <input id="recordTypeContract" type="checkbox"
+                           name="recordType" value="contract" th:checked="${recordTypecontract}"/>
+                    <span class="glyphicon glyphicon-book"></span>
+                    <label for="recordTypeContract">Smlouva</label>
+                </li>
+                <li class="col-md-12 col-xs-3">
+                    <input id="recordTypeOrder" type="checkbox"
+                           name="recordType" value="order" th:checked="${recordTypeorder}"/>
+                    <span class="glyphicon glyphicon-barcode"></span>
+                    <label for="recordTypeOrder">Zakázka</label>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-10 col-xs-12">
+            <div th:if="${records != null and not #lists.isEmpty(records)}">
+                <table class="table table-hover" id="dev-table">
+                    <thead>
+                    <tr>
+                        <th class="col-md-6 col-sm-6">Název</th>
+                        <th class="col-md-1 col-sm-1">Typ</th>
+                        <th class="col-md-2 col-sm-2">Částka</th>
+                        <th class="col-md-3 col-sm-3 text-center">Datum zpracování</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:each="record : ${records}">
+                        <tr>
+                            <td style="word-wrap: break-word">
+                                <a href="#" th:href="@{{recordDetailLink}/{orderId}(orderId=${record.recordId},
+                            recordDetailLink=${recordDetailLink})}" th:text="${record.subject}"></a>
+                            </td>
+                            <div class="text-center" th:replace="fragments/recordType :: recordType
+                            (recordType=${record.recordType.toString()})">...
+                            </div>
+                            <td th:text="${record.amountCZK} + ' CZK'">...</td>
+                            <td class="text-center" th:text="${#dates.format(record.retrieval.date, 'dd-MM-yyyy')}">
+                                ...
+                            </td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+            <div th:unless="${records != null and not #lists.isEmpty(records)}">
+                Žádný záznam
+            </div>
+        </div>
+    </div>
+    <div th:if="${records != null and not #lists.isEmpty(records)}">
+        <div class="row">
+            <div class="col-md-12">
+                <div th:replace="fragments/pagination :: pagination">...</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    $(":checkbox").on("click", function () {
+        var result = "";
+        $('input[type=checkbox]').each(function () {
+            if (this.checked) {
+                if (result === "") {
+                    result += $(this).val();
+                } else {
+                    result += "," + $(this).val();
+                }
+            }
+        });
+        var recordsLink = /*[[${recordsLink.toString()}]]*/ "http://localhost:8090/documents";
+        var organizationId = getUrlParameter('organization');
+        var resultLink = recordsLink;
+        if (result !== '') {
+            resultLink += '?documentTypes=' + result;
+            if (organizationId !== undefined && organizationId !== '') {
+                resultLink += '&organization=' + organizationId;
+            }
+        } else {
+            if (organizationId !== undefined && organizationId !== '') {
+                resultLink += '?organization=' + organizationId;
+            }
+        }
+        window.location.href = resultLink;
+    });
+    /*]]>*/
+</script>
+</body>
+</html>

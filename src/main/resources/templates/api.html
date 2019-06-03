@@ -1,0 +1,134 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/assets :: headerFragment">
+    <title id="pageTitle">API</title>
+</head>
+<body>
+<div th:replace="fragments/header :: header">...</div>
+<div class="container">
+    <h1 class="header text-center">OpenDataCR.cz</h1>
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-8">
+        <div class="row">
+            <h5 class="main-page-text">
+                Na našem portálu poskytujeme možnost získat obsah databáze Open data Česká republika pomocí jednoduchého
+                API.
+                Níže je uveden návod k použití našeho API.
+            </h5>
+        </div>
+        <div class="row">
+            <div class="box">
+                <div class="box-content">
+                    <h1 class="tag-title">Seznam dokumentů</h1>
+                    <hr/>
+                    <p>Na seznam dostupných dokumentů lze přistupovat na end-pointu:</p>
+                    <p th:text="${apiDocumentsLink} + '?rowStart=1&amp;rowEnd=10&amp;recordTypes=invoice,payment'"
+                       class="bg-info text-white"></p>
+                    <p><b>rowStart</b> - číslo dokumentu, který se dotáhne jako první</p>
+                    <p><b>rowEnd</b> - číslo dokumentu, který se dotáhne jako poslední</p>
+                    <p><b>recordTypes</b> - typ nebo typy dokumentů, na které se dotazuje. Mezi typy patří:</p>
+                    <ul>
+                        <li>
+                            invoice (faktura),
+                        </li>
+                        <li>
+                            payment (platba),
+                        </li>
+                        <li>
+                            order (zakázka),
+                        </li>
+                        <li>
+                            contract (smlouva).
+                        </li>
+                    </ul>
+                    <br/>
+                    <a href="#"
+                       th:href="@{${apiDocumentsLink} + '?rowStart=1&amp;rowEnd=10&amp;recordTypes=invoice,payment'}"
+                       class="btn btn-block btn-primary">Příklad seznamu dokumentů</a>
+                </div>
+            </div>
+            <div class="box">
+                <div class="box-content">
+                    <h1 class="tag-title">Detail dokumentu</h1>
+                    <hr/>
+                    <p>Na detail dokumentu lze přistupovat na end-pointu:</p>
+                    <p th:text="${apiDocumentsLink} + '/[id_dokumentu]'"
+                       class="bg-info text-white"
+                    ></p>
+                    <p><b>id_dokumentu</b> - id dokumentu, na který se dotazuje</p>
+                    <br/>
+                    <a href="#"
+                       th:href="@{${apiDocumentsLink} + '/1'}"
+                       class="btn btn-block btn-primary">Příklad detailu dokumentu</a>
+                </div>
+            </div>
+            <div class="box">
+                <div class="box-content">
+                    <h1 class="tag-title">Seznam organizací</h1>
+                    <hr/>
+                    <p>Na seznam dostupných organizací lze přistupovat na end-pointu:</p>
+                    <p th:text="${apiOrganizationsLink} + '?rowStart=1&amp;rowEnd=10&amp;organizationTypes=ministry,company'"
+                       class="bg-info text-white"
+                    ></p>
+                    <p><b>rowStart</b> - číslo dokumentu, který se dotáhne jako první</p>
+                    <p><b>rowEnd</b> - číslo dokumentu, který se dotáhne jako poslední</p>
+                    <p><b>recordTypes</b> - typ nebo typy organizací, na které se dotazuje. Mezi typy patří:</p>
+                    <ul>
+                        <li>
+                            ministry (ministerstvo),
+                        </li>
+                        <li>
+                            company (firma),
+                        </li>
+                        <li>
+                            individual (podnikatel),
+                        </li>
+                        <li>
+                            other (ostatní).
+                        </li>
+                    </ul>
+                    <br/>
+                    <a href="#"
+                       th:href="@{${apiOrganizationsLink} + '?rowStart=1&amp;rowEnd=10&amp;organizationTypes=ministry,company'}"
+                       class="btn btn-block btn-primary">Příklad seznamu organizací</a>
+                </div>
+            </div>
+            <div class="box">
+                <div class="box-content">
+                    <h1 class="tag-title">Detail organizace</h1>
+                    <hr/>
+                    <p>Na detail organizace lze přistupovat na end-pointu:</p>
+                    <p th:text="${apiOrganizationsLink} + '/[id_organizace]'"
+                       class="bg-info text-white"
+                    ></p>
+                    <p><b>id_organizace</b> - id organizace, na kterou se dotazuje</p>
+                    <br/>
+                    <a href="#"
+                       th:href="@{${apiOrganizationsLink} + '/1'}"
+                       class="btn btn-block btn-primary">Příklad detailu organizace</a>
+                </div>
+            </div>
+            <div class="box">
+                <div class="box-content">
+                    <h1 class="tag-title">Detail organizace vyhledavání</h1>
+                    <hr/>
+                    <p>Detail organizace lze vyhledávat v databázi podle IČO (Identifikační číslo osoby) na
+                        end-pointu:</p>
+                    <p th:text="${apiOrganizationsLink} + '?ico=00006947'"
+                       class="bg-info text-white"
+                    ></p>
+                    <p><b>ico</b> - ico organizace, na kterou se dotazuje</p>
+                    <br/>
+                    <a href="#"
+                       th:href="@{${apiOrganizationsLink} + '?ico=00006947'}"
+                       class="btn btn-block btn-primary">Příklad detailu organizace</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+    </div>
+</div>
+</body>
+</html>

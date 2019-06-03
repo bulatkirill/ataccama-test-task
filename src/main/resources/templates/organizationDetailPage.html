@@ -1,0 +1,138 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/assets :: headerFragment">
+    <title id="pageTitle">Detail organizace</title>
+</head>
+<body>
+<div th:replace="fragments/header :: header">...</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-xs-12">
+            <table class="table table-hover" id="dev-table">
+                <thead>
+                <tr>
+                    <th colspan="2">
+                        Detail organizace
+                    </th>
+                </tr>
+                </thead>
+                <tr th:if="${entity.name != null}">
+                    <th class="col-md-6">Název</th>
+                    <td th:text="${entity.name}" class="col-md-6"></td>
+                </tr>
+                <tr th:if="${entity.ico != null}">
+                    <th>IČO</th>
+                    <td th:text="${entity.ico}" class="col-md-6"></td>
+                </tr>
+                <tr th:if="${entity.dic != null}">
+                    <th>DIČ</th>
+                    <td th:text="${entity.dic}">...</td>
+                </tr>
+                <tr>
+                    <th>Počet publikovaných dokumentů</th>
+                    <td th:if="${entity.getRecordsAsAuthority() != null}"
+                        th:text="${entity.getRecordsAsAuthority().size()}">...
+                    </td>
+                    <td th:unless="${entity.getRecordsAsAuthority() != null}">0</td>
+                </tr>
+                <tr>
+                    <th>Počet souvisejících dokumentů</th>
+                    <td th:if="${entity.getRecordsAsPartner() != null}"
+                        th:text="${entity.getRecordsAsPartner().size()}">...
+                    </td>
+                    <td th:unless="${entity.getRecordsAsPartner() != null}">0</td>
+                </tr>
+                <tr th:if="${entity.entityType != null}">
+                    <th>Typ organizace</th>
+                    <div th:replace="fragments/entityType :: entityType
+                            (entityType=${entity.entityType.toString()})"></div>
+                </tr>
+                <tr th:if="${entity.getPublic() != null}">
+                    <th>Veřejná</th>
+                    <td>
+                        <div th:replace="fragments/trueFalseGlyphSwitch :: booleanGlyphicon
+                            (val=${entity.getPublic()})"></div>
+                    </td>
+                </tr>
+                <tr th:if="${not #lists.isEmpty(entity.getRecordsAsAuthority()) or not #lists.isEmpty(entity.getRecordsAsPartner())}">
+                    <th>Seznam dokumentů souvisejících s touto organizací</th>
+                    <td>
+                        <a href="#" th:href="@{${recordsLink} + '?organization=' + ${entity.id}}">Dokumenty</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-6 col-xs-12" style="border-left: 1px solid #ccc;">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th colspan="3">
+                        Související dokumenty
+                    </th>
+                </tr>
+                <tr>
+                    <th>Název</th>
+                    <th>Typ</th>
+                    <th>Částka</th>
+                </tr>
+                </thead>
+                <tbody th:if="${not #lists.isEmpty(entity.getRecordsAsPartner())}">
+                <tr th:each="i : ${#numbers.sequence( 0, T(Math).min(2,entity.getRecordsAsPartner().size() - 1))}">
+                    <td class="col-md-6 col-xs-6">
+                        <a href="#" th:href="@{{recordsLink}/{recordId}(
+                                recordId=${entity.getRecordsAsPartner().get(i).recordId},
+                                recordsLink=${recordsLink})}"
+                           th:text="${entity.getRecordsAsPartner().get(i).subject}"></a>
+                    </td>
+                    <div th:replace="fragments/recordType :: recordType
+                            (recordType=${entity.getRecordsAsPartner().get(i).recordType.toString()})"></div>
+                    <td th:text="${entity.getRecordsAsPartner().get(i).amountCZK} + ' CZK'"></td>
+                </tr>
+                </tbody>
+                <div th:unless="${not #lists.isEmpty(entity.getRecordsAsPartner())}">
+                    <tbody>
+                    <tr>
+                        <td colspan="3">Žádný zaznam</td>
+                    </tr>
+                    </tbody>
+                </div>
+            </table>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th colspan="3">
+                        Publikované dokumenty
+                    </th>
+                </tr>
+                <tr>
+                    <th>Název</th>
+                    <th>Typ</th>
+                    <th>Částka</th>
+                </tr>
+                </thead>
+                <tbody th:if="${not #lists.isEmpty(entity.getRecordsAsAuthority())}">
+                <tr th:each="i : ${#numbers.sequence( 0, T(Math).min(2,entity.getRecordsAsAuthority().size() - 1))}">
+                    <td class="col-md-6 col-xs-6">
+                        <a href="#" th:href="@{{recordsLink}/{recordId}(
+                                recordId=${entity.getRecordsAsAuthority().get(i).recordId},
+                                recordsLink=${recordsLink})}"
+                           th:text="${entity.getRecordsAsAuthority().get(i).subject}"></a>
+                    </td>
+                    <div th:replace="fragments/recordType :: recordType
+                            (recordType=${entity.getRecordsAsAuthority().get(i).recordType.toString()})"></div>
+                    <td th:text="${entity.getRecordsAsAuthority().get(i).amountCZK} + ' CZK'"></td>
+                </tr>
+                </tbody>
+                <div th:unless="${not #lists.isEmpty(entity.getRecordsAsAuthority())}">
+                    <tbody>
+                    <tr>
+                        <td colspan="3">Žádný zaznam</td>
+                    </tr>
+                    </tbody>
+                </div>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

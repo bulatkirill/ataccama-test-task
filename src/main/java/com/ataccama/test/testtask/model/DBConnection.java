@@ -1,9 +1,6 @@
 package com.ataccama.test.testtask.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 /**
@@ -58,6 +55,10 @@ public class DBConnection {
      * Password to use for connection
      */
     private String password;
+
+    @ManyToOne
+    @JoinColumn
+    private Team team;
 
     public DBConnection() {
 
@@ -165,5 +166,13 @@ public class DBConnection {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, provider, host, port, dbName, queryParams, username, password);
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 }

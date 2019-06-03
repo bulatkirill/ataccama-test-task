@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/assets :: headerFragment">
+    <title id="pageTitle">Tean detail</title>
+</head>
+<body>
+<div th:replace="fragments/header :: header">...</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-xs-12">
+            <table class="table table-hover" id="dev-table">
+                <thead>
+                <tr>
+                    <th colspan="2">
+                        Connection detail
+                    </th>
+                </tr>
+                </thead>
+                <tr th:if="${connection.name != null}">
+                    <th class="col-md-6">Name</th>
+                    <td th:text="${connection.name}" class="col-md-6"></td>
+                </tr>
+                <tr th:if="${connection.provider != null}">
+                    <th>Provider</th>
+                    <td th:text="${connection.provider}" class="col-md-6"></td>
+                </tr>
+                <tr th:if="${connection.host != null}">
+                    <th>Host</th>
+                    <td th:text="${connection.host}">...</td>
+                </tr>
+                <tr th:if="${connection.port != null}">
+                    <th>Host</th>
+                    <td th:text="${connection.port}">...</td>
+                </tr>
+                <tr th:if="${connection.dbName != null}">
+                    <th>Host</th>
+                    <td th:text="${connection.dbName}">...</td>
+                </tr>
+                <tr th:if="${connection.queryParams != null}">
+                    <th>Host</th>
+                    <td th:text="${connection.queryParams}">...</td>
+                </tr>
+                <tr th:if="${connection.username != null}">
+                    <th>Host</th>
+                    <td th:text="${connection.username}">...</td>
+                </tr>
+                <tr th:if="${connection.password != null}">
+                    <th>Host</th>
+                    <td th:text="${connection.password}">...</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-6 col-xs-12" style="border-left: 1px solid #ccc;">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th colspan="3">
+                        Connection's schemas
+                    </th>
+                </tr>
+                <tr>
+                    <th>Name</th>
+                    <th>Owner</th>
+                </tr>
+                </thead>
+                <tbody th:if="${not #lists.isEmpty(schemas)}">
+                <tr th:each="schema : ${schemas}">
+                    <td style="word-wrap: break-word">
+                        <a href="" th:href="@{http://localhost:8080/connections/{connectionId}/schema/{schemaName}
+                        (connectionId=${connection.id}, schenaName=${schema.nspName})}"
+                           th:text="${schema.nspName}"></a>
+                    </td>
+                    <td style="word-wrap: break-word" th:text="${schema.nspOwner}">
+                    </td>
+                </tr>
+                </tbody>
+                <div th:unless="${not #lists.isEmpty(schemas)}">
+                    <tbody>
+                    <tr>
+                        <td colspan="3">No schemas for this connection</td>
+                    </tr>
+                    </tbody>
+                </div>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

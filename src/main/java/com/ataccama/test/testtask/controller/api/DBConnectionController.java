@@ -1,4 +1,4 @@
-package com.ataccama.test.testtask.controller;
+package com.ataccama.test.testtask.controller.api;
 
 import com.ataccama.test.testtask.model.DBConnection;
 import com.ataccama.test.testtask.model.exception.ValidationException;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/connection")
+@RequestMapping("/api/connection")
 public class DBConnectionController {
 
     private DBConnectionService dbConnectionService;

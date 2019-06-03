@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/assets :: headerFragment">
+    <title id="pageTitle">Tean detail</title>
+</head>
+<body>
+<div th:replace="fragments/header :: header">...</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-xs-12">
+            <table class="table table-hover" id="dev-table">
+                <thead>
+                <tr>
+                    <th colspan="2">
+                        Team detail
+                    </th>
+                </tr>
+                </thead>
+                <tr th:if="${team.name != null}">
+                    <th class="col-md-6">Name</th>
+                    <td th:text="${team.name}" class="col-md-6"></td>
+                </tr>
+                <tr th:if="${team.description != null}">
+                    <th>Description</th>
+                    <td th:text="${team.description}" class="col-md-6"></td>
+                </tr>
+                <tr th:if="${team.dbConnections != null}">
+                    <th>Number of connections</th>
+                    <td th:text="${team.dbConnections.size()}">...</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-6 col-xs-12" style="border-left: 1px solid #ccc;">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th colspan="3">
+                        Team's connections
+                    </th>
+                </tr>
+                <tr>
+                    <th>Name</th>
+                    <th>Provider</th>
+                    <th>Host</th>
+                </tr>
+                </thead>
+                <tbody th:if="${not #lists.isEmpty(team.getDbConnections())}">
+                <tr th:each="connection : ${team.getDbConnections()}">
+                    <td style="word-wrap: break-word">
+                        <a href="" th:href="@{http://localhost:8080/connections/{connectionId}(connectionId=${connection.id})}"
+                           th:text="${connection.name}"></a>
+                    </td>
+                    <td style="word-wrap: break-word" th:text="${connection.provider}">
+                    </td>
+                    <td style="word-wrap: break-word" th:text="${connection.host}">
+                    </td>
+                </tr>
+                </tbody>
+                <div th:unless="${not #lists.isEmpty(team.getDbConnections())}">
+                    <tbody>
+                    <tr>
+                        <td colspan="3">Žádný zaznam</td>
+                    </tr>
+                    </tbody>
+                </div>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

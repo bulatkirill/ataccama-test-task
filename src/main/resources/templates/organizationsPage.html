@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/assets :: headerFragment">
+    <title id="pageTitle">Organizace</title>
+</head>
+<body>
+<div th:replace="fragments/header :: header">...</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-2 col-xs-12">
+            <div class="col-md-12">
+                <h4>
+                    Typ organizace
+                </h4>
+            </div>
+            <ul class="list-unstyled">
+                <li class="col-md-12 col-xs-4">
+                    <input id="entityTypeMinistry" type="checkbox"
+                           name="entityType" value="ministry" th:checked="${entityTypeministry}"/>
+                    <span class="glyphicon glyphicon-home"></span>
+                    <label for="entityTypeMinistry">Ministerstvo</label>
+                </li>
+                <li class="col-md-12 col-xs-2">
+                    <input id="entityTypeCompany" type="checkbox"
+                           name="entityType" value="company" th:checked="${entityTypecompany}"/>
+                    <span class="glyphicon glyphicon-briefcase"></span>
+                    <label for="entityTypeCompany">Firma</label>
+                </li>
+                <li class="col-md-12 col-xs-3">
+                    <input id="entityTypeIndividual" type="checkbox"
+                           name="entityType" value="individual" th:checked="${entityTypeindividual}"/>
+                    <span class="glyphicon glyphicon-user"></span>
+                    <label for="entityTypeIndividual">Podnikatel</label>
+                </li>
+                <li class="col-md-12 col-xs-3">
+                    <input id="entityTypeOther" type="checkbox"
+                           name="entityType" value="other" th:checked="${entityTypeother}"/>
+                    <span class="glyphicon glyphicon-comment"></span>
+                    <label for="entityTypeOther">Ostatní</label>
+                </li>
+            </ul>
+        </div>
+        <div th:if="${entities != null and not #lists.isEmpty(entities)}">
+            <div class="col-md-10 col-xs-12">
+                <table class="table table-hover" id="dev-table">
+                    <thead>
+                    <tr>
+                        <th class="col-md-8 col-sm-8">Název</th>
+                        <th class="col-md-2 col-sm-2">Typ</th>
+                        <th class="col-md-2 col-sm-2">IČO</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:each="entity : ${entities}">
+                        <tr>
+                            <td style="word-wrap: break-word">
+                                <a href="#" th:href="@{{entityDetailLink}/{entityId}(entityId=${entity.id},
+                        entityDetailLink=${entityDetailLink})}" th:text="${entity.name}"></a>
+                            </td>
+                            <td th:replace="fragments/entityType :: entityType
+                            (entityType=${entity.entityType.toString()})">...</td>
+                            <td th:text="${entity.ico}">...</td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div th:unless="${entities != null and not #lists.isEmpty(entities)}" class="col-md-10 col-xs-12">
+            <h4>
+                Žádný záznam
+            </h4>
+        </div>
+    </div>
+    <div th:if="${entities != null and not #lists.isEmpty(entities)}">
+        <div class="row">
+            <div th:replace="fragments/pagination :: pagination">...</div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    $(":checkbox").on("click", function () {
+        var result = "";
+        $('input[type=checkbox]').each(function () {
+            if (this.checked) {
+                if (result === "") {
+                    result += $(this).val();
+                } else {
+                    result += "," + $(this).val();
+                }
+            }
+        });
+        var organizationsLink = /*[[${organizationsLink.toString()}]]*/ "http://localhost:8090/organizations";
+        if (result === "") {
+            window.location.href = organizationsLink;
+        } else {
+            window.location.href = organizationsLink + "?organizationTypes=" + result;
+        }
+    });
+    /*]]>*/
+</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<div class="container" th:fragment="header">
+    <nav class="navbar navbar-default">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <div class="frame">
+                <span class="helper"></span>
+                <img src="../img/big-data32.png" th:href="@{/img/big-data32.png}"/>
+            </div>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="http://localhost:8080/connections">Connections</a>
+                </li>
+                <li>
+                    <a href="http://localhost:8080/teams">Teams</a>
+                </li>
+                <li>
+                    <!--<a href="#" th:href="${organizationsLink.toString()}">Organizace</a>-->
+                </li>
+                <li>
+                    <!--<a href="#" th:href="${apiLink.toString()}">API</a>-->
+                </li>
+                <li>
+                    <!--<a href="#" th:href="${aboutLink.toString()}">O nás</a>-->
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+</body>
+</html>
