@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/assets :: headerFragment">
-    <title id="pageTitle">Tean detail</title>
+    <title id="pageTitle">Connection detail</title>
 </head>
 <body>
 <div th:replace="fragments/header :: header">...</div>
@@ -66,8 +66,8 @@
                 <tbody th:if="${not #lists.isEmpty(schemas)}">
                 <tr th:each="schema : ${schemas}">
                     <td style="word-wrap: break-word">
-                        <a href="" th:href="@{http://localhost:8080/connections/{connectionId}/schema/{schemaName}
-                        (connectionId=${connection.id}, schenaName=${schema.nspName})}"
+                        <a href="" th:href="@{http://localhost:8080/api/v1/connection/{connectionId}/schemas/{schemaName}/tables
+                        (connectionId=${connection.id}, schemaName=${schema.nspName})}"
                            th:text="${schema.nspName}"></a>
                     </td>
                     <td style="word-wrap: break-word" th:text="${schema.nspOwner}">

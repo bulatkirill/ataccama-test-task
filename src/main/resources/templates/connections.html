@@ -11,10 +11,8 @@
         <tr>
             <th class="col-md-3 col-sm-3">Name</th>
             <th class="col-md-3 col-sm-3">Provider</th>
-            <!--<th class="col-md-2 col-sm-2">Port</th>-->
             <th class="col-md-3 col-sm-3">Database name</th>
             <th class="col-md-3 col-sm-3">Username</th>
-            <!--<th class="col-md-2 col-sm-2">Password</th>-->
         </tr>
         </thead>
         <tbody>
@@ -23,21 +21,9 @@
                 <td style="word-wrap: break-word">
                     <a href="#" th:text="${connection.name}"></a>
                 </td>
-                <td style="word-wrap: break-word">
-                    <a href="#" th:text="${connection.provider}"></a>
-                </td>
-                <!--<td style="word-wrap: break-word">-->
-                    <!--<a href="#" th:text="${connection.port}"></a>-->
-                <!--</td>-->
-                <td style="word-wrap: break-word">
-                    <a href="#" th:text="${connection.dbName}"></a>
-                </td>
-                <td style="word-wrap: break-word">
-                    <a href="#" th:text="${connection.username}"></a>
-                </td>
-                <!--<td style="word-wrap: break-word">-->
-                    <!--<a href="#" th:text="${connection.password}"></a>-->
-                <!--</td>-->
+                <td style="word-wrap: break-word" th:text="${connection.provider}"></td>
+                <td style="word-wrap: break-word" th:text="${connection.dbName}"></td>
+                <td style="word-wrap: break-word" th:text="${connection.username}"></td>
             </tr>
         </th:block>
         </tbody>

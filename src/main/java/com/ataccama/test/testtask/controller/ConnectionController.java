@@ -31,8 +31,8 @@ public class ConnectionController {
     @GetMapping(value = "/connections/{id}")
     public String getConnectionById(@PathVariable("id") Long id, Model model) throws UnsupportedProviderException {
         DBConnection dbConnection = dbConnectionService.findById(id);
-        model.addAttribute("connection", dbConnection);
         List<DBSchema> dbSchema = dbMetadataService.findAllSchemas(id);
+        model.addAttribute("connection", dbConnection);
         model.addAttribute("schemas", dbSchema);
         return "connection";
     }

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/assets :: headerFragment">
-    <title id="pageTitle">Tean detail</title>
+    <title id="pageTitle">Team detail</title>
 </head>
 <body>
 <div th:replace="fragments/header :: header">...</div>
@@ -59,7 +59,7 @@
                 <div th:unless="${not #lists.isEmpty(team.getDbConnections())}">
                     <tbody>
                     <tr>
-                        <td colspan="3">Žádný zaznam</td>
+                        <td colspan="3">No connections found</td>
                     </tr>
                     </tbody>
                 </div>
